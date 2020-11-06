@@ -9,7 +9,7 @@ import argparse
 
 import torch
 
-import data
+from dataloader import DataLoader
 
 parser = argparse.ArgumentParser(description='PyTorch Wikitext-2 Language Model')
 
@@ -47,7 +47,7 @@ with open(args.checkpoint, 'rb') as f:
     model = torch.load(f).to(device)
 model.eval()
 
-corpus = data.Corpus(args.data)
+corpus = DataLoader(args.data)
 ntokens = len(corpus.dictionary)
 
 
@@ -58,11 +58,11 @@ targets = torch.randint(ntokens, (1, 1), dtype=torch.long).view(-1).to(device)
 with open(args.outf, 'w') as outf:
     with torch.no_grad():  # no tracking history
         for i in range(args.words):
-            #output, hidden, loss = model(input, hidden, targets)
-            #word_weights = output.squeeze().div(args.temperature).exp().cpu()
-            #word_idx = torch.multinomial(word_weights, 1)[0]
-                #word_idx = torch.argmax(word_weights).item()
-            #input.fill_(word_idx)
+            # output, hidden, loss = model(input, hidden, targets)
+            # word_weights = output.squeeze().div(args.temperature).exp().cpu()
+            # word_idx = torch.multinomial(word_weights, 1)[0]
+            # word_idx = torch.argmax(word_weights).item()
+            # input.fill_(word_idx)
             
             emb = model.encoder(input)
             output, hidden = model.rnn(emb, hidden)
