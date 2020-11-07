@@ -1,5 +1,5 @@
-# AdaptiveIO [WIP]
-Language modeling with Adaptive Softmax and Adaptive Input Representation
+# Language Model PyTorch
+Train language models from scratch and finetune them.
 
 ## How to train
 ```
