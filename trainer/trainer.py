@@ -184,8 +184,8 @@ class Trainer():
             
             # Run on test data.
             # this is not working for some reason :(
-            test_loss = self._evaluate(self.test_data[0])
-            print('=' * 89)
-            print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(
-                test_loss, math.exp(test_loss)))
-            print('=' * 89)
+            # test_loss = self._evaluate(self.test_data[0])
+            # print('=' * 89)
+            # print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(
+            #    test_loss, math.exp(test_loss)))
+            # print('=' * 89)

@@ -6,13 +6,13 @@ import os
 import torch
 import torch.nn as nn
 import torch.onnx
-from utils import millify, repackage_hidden
 import pickle
 import wandb
 import json
 from dataloader import DataLoader
 from args import args
 
+from utils import millify
 from models import RNNModel, AdaptiveSoftmaxRNN
 from trainer import Trainer
 
@@ -120,89 +120,8 @@ print('-' * 89)
 ###############################################################################
 
 
-
-# Loop over epochs.
-lr = args.lr
-best_val_loss = None
-
 trainer = Trainer(
         corpus, model, args, criterion, optimizer, scheduler, train_data, test_data, val_data, cache
     )
+
 trainer.fit()
-# At any point you can hit Ctrl + C to break out of training early.
-# try:
-#     if not args.no_log:
-#         name = f'b{args.batch_size}_lr{args.lr}_L{args.nlayers}_h{args.nhid}_em{args.emsize}_drp{args.rnn_dropout}_bptt{args.bptt}'
-#         wandb.init(name=name, project="5m_line_shuffled")
-#         wandb.config.update(args)
-#     trainer = Trainer(
-#         corpus, model, args, criterion, optimizer, scheduler, train_data, test_data, val_data
-#     )
-    
-#     for epoch in range(1, args.epochs+1):
-#         epoch_start_time = time.time()
-#         trainer.train(epoch)
-#         val_loss = trainer.evaluate(val_data)
-#         val_ppl = math.exp(val_loss)
-#         print('-' * 89)
-#         print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | '
-#                 'valid ppl {:8.2f}'.format(epoch, (time.time() - epoch_start_time),
-#                                            val_loss, val_ppl))
-#         print('-' * 89)
-        
-#         if not args.no_log:
-#             wandb.log({'val_ppl': val_ppl, 'val_loss': val_loss})
-        
-#         # Save the model if the validation loss is the best we've seen so far.
-#         if not args.no_save:
-#             # create the destination directory if it doesn't exist
-#             if not os.path.exists(args.save):
-#                 os.mkdir(args.save)
-            
-#             # check if the current loss is the best validation loss
-#             if not best_val_loss or val_loss < best_val_loss:
-#                 best_val_loss = val_loss
-
-#                 # save the best model
-#                 print('saving model...')
-#                 torch.save(model, f'{args.save}/best_model.pt')
-
-#                 # also save the checkpoint for the best model
-#                 torch.save({
-#                     'epoch': epoch,
-#                     'model_state_dict': model.state_dict(),
-#                     'optimizer_state_dict': optimizer.state_dict(),
-#                     'val_loss': val_loss,
-#                     'val_ppl': val_ppl,
-#                     'vocabulary': cache
-#                 }, f'{args.save}/best_model_checkpoint.pt')
-#             else:
-#                 # this saves the checkpoint for every epoch
-#                 torch.save({
-#                     'epoch': epoch,
-#                     'model_state_dict': model.state_dict(),
-#                     'optimizer_state_dict': optimizer.state_dict(),
-#                     'val_loss': val_loss,
-#                     'val_ppl':val_ppl,
-#                     'vocabulary': cache
-#                 }, f'{args.save}/checkpoint.pt')
-        
-# #         print(dir(optimizer))
-#         print('-'*70)
-#         print()
-#         scheduler.step(val_loss)
-        
-# except KeyboardInterrupt:
-#     print('-' * 89)
-#     print('Exiting from training early')
-
-
-
-# # Run on test data.
-# test_loss = evaluate(test_data)
-# print('=' * 89)
-# print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(
-#     test_loss, math.exp(test_loss)))
-# print('=' * 89)
-
-
