@@ -129,7 +129,6 @@ class Trainer():
                 epoch_start_time = time.time()
                 self._train(epoch)
                 val_loss = self._evaluate(self.val_data)
-                print(val_loss)
                 val_ppl = math.exp(val_loss)
                 print('-' * 89)
                 print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | '
