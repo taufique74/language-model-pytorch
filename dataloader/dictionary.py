@@ -30,7 +30,7 @@ class Dictionary(object):
         self.idx2word = ['<unk>']
 
         if self.add_eos:
-            self.word2idx = {'<eos>': 1}
+            self.word2idx = {'<unk>': 0, '<eos>': 1}
             self.idx2word.append('<eos>')
 
         for word, frequency in self.counter.most_common():
