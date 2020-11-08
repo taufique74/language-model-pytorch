@@ -6,7 +6,8 @@
 ###############################################################################
 
 import argparse
-
+import pickle
+import os
 import torch
 
 from dataloader import DataLoader
@@ -16,8 +17,8 @@ parser = argparse.ArgumentParser(description='PyTorch Wikitext-2 Language Model'
 # Model parameters.
 parser.add_argument('--data', type=str, default='./data/bangla',
                     help='location of the data corpus')
-parser.add_argument('--checkpoint', type=str, default='checkpoints/model_epoch6_valppl234.07481649035765_.pt',
-                    help='model checkpoint to use')
+parser.add_argument('--model', type=str, default='checkpoints/model_epoch6_valppl234.07481649035765_.pt',
+                    help='path to the trained model ')
 parser.add_argument('--outf', type=str, default='generated.txt',
                     help='output file for generated text')
 parser.add_argument('--words', type=int, default='1000',
@@ -43,12 +44,18 @@ device = torch.device("cuda" if args.cuda else "cpu")
 if args.temperature < 1e-3:
     parser.error("--temperature has to be greater or equal 1e-3")
 
-with open(args.checkpoint, 'rb') as f:
+# load the trained model
+with open(args.model, 'rb') as f:
     model = torch.load(f).to(device)
 model.eval()
 
-corpus = DataLoader(args.data)
-ntokens = len(corpus.dictionary)
+# load the pickled vocabulary
+with open(os.path.join(args.data, 'vocab.pickle'), 'rb') as f:
+    corpus = pickle.load(f)
+
+# import pdb; pdb.set_trace()
+# corpus = DataLoader(args.data)
+ntokens = len(corpus['idx2word'])
 
 
 hidden = model.init_hidden(1)
@@ -76,7 +83,7 @@ with open(args.outf, 'w') as outf:
             input.fill_(word_idx)
             
 
-            word = corpus.dictionary.idx2word[word_idx]
+            word = corpus['idx2word'][word_idx]
 
             outf.write(word + ('\n' if i % 20 == 19 else ' '))
 
